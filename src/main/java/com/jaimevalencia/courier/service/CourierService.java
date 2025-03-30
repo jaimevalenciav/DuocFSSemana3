@@ -59,9 +59,21 @@ public class CourierService {
     }
 
     public Courier guardarEnvio(Courier courier){
+        // couriers.add(courier);
+        // return courier;
+        boolean existe = couriers.stream()
+        .anyMatch(existingCourier -> existingCourier.getNumEnvio() == courier.getNumEnvio());
+
+        if (existe) {
+            throw new IllegalArgumentException("El número de envío " + courier.getNumEnvio() + " ya está registrado.");
+        }
         couriers.add(courier);
         return courier;
     }
+
+  
+
+
 
     public Courier actualizarEnvio(int numEnvio, Courier courierActualizado){
         Optional<Courier> optionalCourier = consultarPorNumEnvio(numEnvio);
