@@ -1,23 +1,15 @@
 package com.jaimevalencia.courier.controllers;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.jaimevalencia.courier.model.Courier;
+import com.jaimevalencia.courier.model.ResponseWrapper;
 import com.jaimevalencia.courier.service.CourierService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 
 @RestController
@@ -31,28 +23,48 @@ public class CourierController {
     }
 
     @GetMapping
-    public List<Courier> todosEnvios(){
-        return courierService.todosEnvios();
+    public ResponseEntity<?> todosEnvios(){
+        List<Courier> couriers = courierService.todosEnvios();
+        if(couriers.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("En este mometo no hay peliculas registradas en el sistema.");
+        }
+
+        ResponseWrapper<Courier> respuesta = new ResponseWrapper<>(
+            "OK",
+            couriers.size(),
+            couriers);
+        return ResponseEntity.ok(respuesta);
     }
     
-    @GetMapping("/{numEnvio}")
-    public Courier envioPorNumEnvio(@PathVariable int numEnvio){
-        return courierService.consultarPorNumEnvio(numEnvio)
-        .orElseThrow(()-> new ResponseStatusException(
-            HttpStatus.NOT_FOUND,
-            "El numero de envío: " + numEnvio + "  no existe en la base de datos."
-        ));
+    @GetMapping("/{id}")
+    public Courier buscarPorId(@PathVariable Long id) {
+        return courierService.buscarPorId(id);
     }
+
+
 
     @PostMapping
-    public Courier nuevoEnvio(@Valid @RequestBody Courier courier){
-        return courierService.guardarEnvio(courier);
+    public ResponseEntity<ResponseWrapper<Courier>> guardarCourier(@Valid @RequestBody Courier courier){
+        Courier insertada = courierService.guardarEnvio(courier);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper<>("Pelicula guardada satisfactoriamente", 1, List.of(insertada)));
     }
     
 
-    @PutMapping("/numenvio/{numEnvio}")
-    public Courier actualizaEnvio(@Valid @PathVariable int numEnvio, @RequestBody Courier courier ){
-        return courierService.actualizarEnvio(numEnvio, courier);
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseWrapper<Courier>> actualizar(@PathVariable Long id,
+        @Valid @RequestBody Courier courierUpdated){
+            Courier updated = courierService.actualizar(id, courierUpdated);
+            return ResponseEntity.ok(
+                new ResponseWrapper<>("Pelicula se ha actualizado satisfactoriamente.", 1, List.of(updated)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseWrapper<Courier>> eliminarCourier(@PathVariable Long id){
+        courierService.deleted(id);
+        return ResponseEntity.ok(
+            new ResponseWrapper<>("Pelicula eliminada satisfactoriamente.", 1, null)
+        );
     }
 
     
