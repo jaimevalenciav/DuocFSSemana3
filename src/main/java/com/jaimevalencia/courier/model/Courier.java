@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -27,7 +28,7 @@ public class Courier {
     private Long id;
 
     @NotNull(message="El número del envío no puede ser nulo.")
-    @NotBlank(message="El número del envío es obligatorio.")
+    @Min(value=1, message="El valor no puede ser menor a uno.")
     private int numEnvio;
 
     @NotBlank(message="El país de origen no puede estar vacío.")
@@ -47,7 +48,7 @@ public class Courier {
     
     @NotBlank(message="La ubicación actual no puede estar vacía.")
     @NotNull(message="La ubicación actual no puede ser nulo.")
-    @Size(min=2, max=50, message = "La ubicación actual debe tener entre 2 y 50 caracteres.")
+    @Size(min=2, max=50, message = "La ubicación actual debe tener entre 2 y 50 caracteres.")    
     private String ubicacionActual;
 
 

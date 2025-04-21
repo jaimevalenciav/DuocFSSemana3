@@ -17,7 +17,7 @@ public class ResponseWrapper<T> {
     public ResponseWrapper(String status, int cantidad, List<T> data){
         this.status = status;
         this.cantidad = cantidad;
-        this.timestamp = timestamp;
+        this.timestamp = LocalDateTime.now();
         this.data = data;
     }
 

@@ -42,8 +42,6 @@ public class CourierController {
         return courierService.buscarPorId(id);
     }
 
-
-
     @PostMapping
     public ResponseEntity<ResponseWrapper<Courier>> guardarCourier(@Valid @RequestBody Courier courier){
         Courier insertada = courierService.guardarEnvio(courier);
