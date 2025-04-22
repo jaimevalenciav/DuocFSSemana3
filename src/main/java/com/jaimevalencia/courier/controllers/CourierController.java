@@ -27,7 +27,7 @@ public class CourierController {
         List<Courier> couriers = courierService.todosEnvios();
         if(couriers.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body("En este mometo no hay peliculas registradas en el sistema.");
+            .body("En este mometo no hay registros registrados en el sistema.");
         }
 
         ResponseWrapper<Courier> respuesta = new ResponseWrapper<>(
@@ -45,7 +45,7 @@ public class CourierController {
     @PostMapping
     public ResponseEntity<ResponseWrapper<Courier>> guardarCourier(@Valid @RequestBody Courier courier){
         Courier insertada = courierService.guardarEnvio(courier);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper<>("Pelicula guardada satisfactoriamente", 1, List.of(insertada)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper<>("Registro de encomienda guardado satisfactoriamente", 1, List.of(insertada)));
     }
     
 
@@ -54,14 +54,14 @@ public class CourierController {
         @Valid @RequestBody Courier courierUpdated){
             Courier updated = courierService.actualizar(id, courierUpdated);
             return ResponseEntity.ok(
-                new ResponseWrapper<>("Pelicula se ha actualizado satisfactoriamente.", 1, List.of(updated)));
+                new ResponseWrapper<>("Registro de encomienda se ha actualizado satisfactoriamente.", 1, List.of(updated)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseWrapper<Courier>> eliminarCourier(@PathVariable Long id){
         courierService.deleted(id);
         return ResponseEntity.ok(
-            new ResponseWrapper<>("Pelicula eliminada satisfactoriamente.", 1, null)
+            new ResponseWrapper<>("Registro de encomienda eliminado satisfactoriamente.", 1, null)
         );
     }
 
