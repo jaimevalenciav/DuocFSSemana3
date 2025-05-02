@@ -11,27 +11,31 @@ import org.springframework.stereotype.Service;
 public class CourierService {
     @Autowired
     
-    private CourierRespository couriers;
+    private final CourierRespository courierRespository;
+
+    public CourierService(CourierRespository courierRespository) {
+        this.courierRespository = courierRespository;
+    }
 
     public List<Courier> todosEnvios(){
-        return couriers.findAll();
+        return courierRespository.findAll();
     }
 
     public Courier buscarPorId(Long id){
-        return couriers.findById(id)
+        return courierRespository.findById(id)
             .orElseThrow(() -> new CourierNotFoundException(id));
     }
 
     public Courier guardarEnvio(Courier courier){
         //valida si existe el pedido
-        if(couriers.existsById(courier.getId())){
+        if(courierRespository.existsById(courier.getId())){
             throw new IllegalArgumentException("Ya existe un envío con el id: " + courier.getId());
         }
-        return couriers.save(courier);
+        return courierRespository.save(courier);
     }  
 
     public Courier actualizar(Long id, Courier courierUpdated){
-        Courier existente = couriers.findById(id).orElseThrow(() -> new CourierNotFoundException(id));
+        Courier existente = courierRespository.findById(id).orElseThrow(() -> new CourierNotFoundException(id));
 
         existente.setNumEnvio(courierUpdated.getNumEnvio());
         existente.setPaisOrigen(courierUpdated.getPaisOrigen());
@@ -39,12 +43,12 @@ public class CourierService {
         existente.setEstado(courierUpdated.getEstado());
         existente.setUbicacionActual(courierUpdated.getUbicacionActual());
 
-        return couriers.save(existente);
+        return courierRespository.save(existente);
     }
 
     public void deleted(Long id){
-        Courier existente = couriers.findById(id).orElseThrow(() -> new CourierNotFoundException(id));
-        couriers.delete(existente);
+        Courier existente = courierRespository.findById(id).orElseThrow(() -> new CourierNotFoundException(id));
+        courierRespository.delete(existente);
     }
 
 }

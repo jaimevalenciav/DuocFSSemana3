@@ -1,14 +1,21 @@
 package com.jaimevalencia.courier.controllers;
 
+import com.jaimevalencia.courier.hateoas.CourierModelAssembler;
 import com.jaimevalencia.courier.model.Courier;
 import com.jaimevalencia.courier.model.ResponseWrapper;
 import com.jaimevalencia.courier.service.CourierService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+
 import java.util.List;
 
 
@@ -17,9 +24,11 @@ import java.util.List;
 public class CourierController {
 
     private final CourierService courierService;
+    private final CourierModelAssembler courierAssembler; // ⬅️ Añadir esta línea
 
-    public CourierController(CourierService courierService){
+    public CourierController(CourierService courierService, CourierModelAssembler courierAssembler) {
         this.courierService = courierService;
+        this.courierAssembler = courierAssembler; // ⬅️ Asignar en el constructor
     }
 
     @GetMapping
@@ -38,8 +47,9 @@ public class CourierController {
     }
     
     @GetMapping("/{id}")
-    public Courier buscarPorId(@PathVariable Long id) {
-        return courierService.buscarPorId(id);
+    public EntityModel<Courier> buscarPorId(@PathVariable Long id) {
+        Courier courier = courierService.buscarPorId(id);
+        return courierAssembler.toModel(courier);
     }
 
     @PostMapping
@@ -63,8 +73,6 @@ public class CourierController {
         return ResponseEntity.ok(
             new ResponseWrapper<>("Registro de encomienda eliminado satisfactoriamente.", 1, null)
         );
-    }
-
-    
+    }   
     
 }
