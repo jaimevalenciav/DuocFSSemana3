@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.springframework.hateoas.RepresentationModel;
 
 
 @Data
@@ -23,7 +24,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "courier") 
 
-public class Courier {
+public class Courier extends RepresentationModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
