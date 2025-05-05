@@ -5,7 +5,7 @@ FROM openjdk:18-jdk-slim
 WORKDIR /app
 
 # Copia el archivo JAR generado por Maven
-COPY target/eventospet-0.0.1-SNAPSHOT.jar app.jar
+COPY target/courier-0.0.1-SNAPSHOT.jar app.jar
 
 # Copia la carpeta del Oracle Wallet al contenedor
 COPY Wallet_O8QS17ER78VQQ79L /app/wallet
