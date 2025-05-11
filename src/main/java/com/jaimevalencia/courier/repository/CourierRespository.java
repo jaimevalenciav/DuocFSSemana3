@@ -6,6 +6,7 @@ import com.jaimevalencia.courier.model.Courier;
 
 public interface CourierRespository extends JpaRepository<Courier, Long>{
 
-   
+   // Método personalizado para buscar por número de orden
+   Courier findByNumEnvio(Integer numEnvio);
 
 }
